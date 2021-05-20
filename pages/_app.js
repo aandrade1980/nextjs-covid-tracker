@@ -1,7 +1,17 @@
-import '../styles/globals.css'
+import { ChakraProvider } from '@chakra-ui/react';
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+export function reportWebVitals(metric) {
+  if (metric.label === 'custom') {
+    console.log(metric);
+  }
 }
 
-export default MyApp
+function MyApp({ Component, pageProps }) {
+  return (
+    <ChakraProvider>
+      <Component {...pageProps} />
+    </ChakraProvider>
+  );
+}
+
+export default MyApp;
