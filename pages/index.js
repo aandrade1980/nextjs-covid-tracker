@@ -1,19 +1,23 @@
 import Head from 'next/head';
-import { v4 as uuidv4 } from 'uuid';
 import { useState } from 'react';
 import {
   Input,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
   Spinner,
+  Table,
+  Tbody,
+  Td,
   Text,
+  Thead,
+  Th,
+  Tr,
+  InputGroup,
+  InputRightElement,
 } from '@chakra-ui/react';
+import { CloseIcon } from '@chakra-ui/icons';
 
 import { useCountry, useMostCasesCountries } from '@/utils/helpers';
+
+import CountriesTable from 'src/components/CountriesTable';
 
 import styles from '@/styles/Home.module.css';
 
@@ -25,10 +29,6 @@ export default function Home() {
 
   if (error) {
     return <div>Error getting countries: {error}</div>;
-  }
-
-  if (!countries) {
-    return <div>Loading countries...</div>;
   }
 
   return (
@@ -48,38 +48,30 @@ export default function Home() {
 
         <div className={styles.grid}>
           <div className={styles.card}>
-            <Table variant="striped">
-              <Thead>
-                <Tr>
-                  <Th>Country</Th>
-                  <Th isNumeric>Today Cases</Th>
-                  <Th isNumeric>Today Deaths</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {countries.map(country => (
-                  <Tr key={uuidv4()}>
-                    <Td>{country.country}</Td>
-                    <Td isNumeric>{country.todayCases}</Td>
-                    <Td isNumeric>{country.todayDeaths}</Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
+            <CountriesTable countries={countries} />
           </div>
         </div>
 
         <footer className={styles.footer}>
           <form>
             <Text fontSize="xl">Results by country</Text>
-            <Input
-              placeholder="USA"
-              type="text"
-              name="country"
-              id="country"
-              value={countryName}
-              onChange={evt => setCountryName(evt.target.value)}
-            />
+            <InputGroup>
+              <Input
+                placeholder="USA"
+                type="text"
+                name="country"
+                id="country"
+                value={countryName}
+                onChange={evt => setCountryName(evt.target.value)}
+              />
+              <InputRightElement
+                children={
+                  countryName && <CloseIcon color="gray.500" w={3} h={3} />
+                }
+                style={{ cursor: 'pointer' }}
+                onClick={() => setCountryName('')}
+              />
+            </InputGroup>
           </form>
           {isLoading ? (
             <div
@@ -95,28 +87,28 @@ export default function Home() {
             </div>
           ) : (
             <div style={{ opacity: country ? 1 : 0, marginLeft: 25 }}>
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th>Active</th>
-                    <th>Cases</th>
-                    <th>Deaths</th>
-                    <th>Cases Per Million</th>
-                    <th>Today Cases</th>
-                    <th>Today Deaths</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{country?.active}</td>
-                    <td>{country?.cases}</td>
-                    <td>{country?.deaths}</td>
-                    <td>{country?.casesPerOneMillion}</td>
-                    <td>{country?.todayCases}</td>
-                    <td>{country?.todayDeaths}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <Table>
+                <Thead>
+                  <Tr>
+                    <Th isNumeric>Active</Th>
+                    <Th isNumeric>Cases</Th>
+                    <Th isNumeric>Deaths</Th>
+                    <Th isNumeric>Cases Per Million</Th>
+                    <Th isNumeric>Today Cases</Th>
+                    <Th isNumeric>Today Deaths</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  <Tr>
+                    <Td isNumeric>{country?.active}</Td>
+                    <Td isNumeric>{country?.cases}</Td>
+                    <Td isNumeric>{country?.deaths}</Td>
+                    <Td isNumeric>{country?.casesPerOneMillion}</Td>
+                    <Td isNumeric>{country?.todayCases}</Td>
+                    <Td isNumeric>{country?.todayDeaths}</Td>
+                  </Tr>
+                </Tbody>
+              </Table>
             </div>
           )}
         </footer>
