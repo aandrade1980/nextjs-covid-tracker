@@ -4,6 +4,7 @@ export default async (req, res) => {
     const response = await fetch(
       'https://coronavirus-19-api.herokuapp.com/countries'
     );
+
     const countries = await response.json();
 
     const sortedCountries = countries.sort(
@@ -12,7 +13,6 @@ export default async (req, res) => {
 
     return res.status(200).json(sortedCountries.splice(1, limit));
   } catch (error) {
-    console.error('Error getting countries: ', error);
-    return res.status(500).message({ error });
+    return res.status(500).json({ error: 'Something went wrong', status: 500 });
   }
 };

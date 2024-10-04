@@ -4,6 +4,7 @@ export default async (req, res) => {
     const response = await fetch(
       'https://coronavirus-19-api.herokuapp.com/countries'
     );
+
     const countries = await response.json();
 
     const country = countries.filter(
@@ -13,6 +14,6 @@ export default async (req, res) => {
     return res.status(200).json(country && country[0]);
   } catch (error) {
     console.error('Error getting country: ', error);
-    return res.status(500).message({ error });
+    return res.status(500).json({ error: 'Something went wrong' });
   }
 };

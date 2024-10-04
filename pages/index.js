@@ -11,7 +11,7 @@ import {
   Th,
   Tr,
   InputGroup,
-  InputRightElement,
+  InputRightElement
 } from '@chakra-ui/react';
 import { CloseIcon } from '@chakra-ui/icons';
 
@@ -25,11 +25,7 @@ export default function Home() {
   const [countryName, setCountryName] = useState('');
 
   const { countries, error } = useMostCasesCountries();
-  const { country, isLoading, isError } = useCountry(countryName);
-
-  if (error) {
-    return <div>Error getting countries: {error}</div>;
-  }
+  const { country, isLoading } = useCountry(countryName);
 
   return (
     <div className={styles.container}>
@@ -48,7 +44,13 @@ export default function Home() {
 
         <div className={styles.grid}>
           <div className={styles.card}>
-            <CountriesTable countries={countries} />
+            {error ? (
+              <div style={{ color: 'red' }}>
+                Error getting countries: {error}
+              </div>
+            ) : (
+              <CountriesTable countries={countries} />
+            )}
           </div>
         </div>
 
